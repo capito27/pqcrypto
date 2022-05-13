@@ -1,10 +1,11 @@
 extern crate cc;
+extern crate dunce;
 
 use std::env;
 use std::path::Path;
 
 fn main() {
-    let includepath = Path::new("include").canonicalize().unwrap();
+    let includepath = dunce::canonicalize(Path::new("include")).unwrap();
     println!("cargo:includepath={}", includepath.to_str().unwrap());
 
     let cfiledir = Path::new("cfiles");
@@ -41,8 +42,8 @@ fn main() {
             builder.flag(format!("--sysroot={}", wasi_sdk_path).as_str());
         }
 
-        let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
-        if target_os == "windows" {
+        let target_env = env::var("CARGO_CFG_TARGET_ENV").unwrap();
+        if target_env == "msvc" {
             builder.flag("/arch:AVX2");
         } else {
             builder.flag("-mavx2");
