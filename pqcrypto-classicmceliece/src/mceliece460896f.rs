@@ -23,11 +23,10 @@ use serde_big_array::BigArray;
 use crate::ffi;
 use pqcrypto_traits::kem as primitive;
 use pqcrypto_traits::{Error, Result};
-use zeroize::Zeroize;
 
 macro_rules! simple_struct {
     ($type: ident, $size: expr) => {
-        #[derive(Clone, Copy, Zeroize)]
+        #[derive(Clone, Copy)]
         #[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
         pub struct $type(
             #[cfg_attr(feature = "serialization", serde(with = "BigArray"))] [u8; $size],

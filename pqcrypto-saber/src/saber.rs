@@ -19,7 +19,6 @@
 use serde::{Deserialize, Serialize};
 #[cfg(feature = "serialization")]
 use serde_big_array::BigArray;
-use zeroize::{Zeroize, ZeroizeOnDrop};
 
 use crate::ffi;
 use pqcrypto_traits::kem as primitive;
@@ -27,7 +26,7 @@ use pqcrypto_traits::{Error, Result};
 
 macro_rules! simple_struct {
     ($type: ident, $size: expr) => {
-        #[derive(Clone, Copy, Debug, Zeroize)]
+        #[derive(Clone, Copy, Debug)]
         #[cfg_attr(feature = "serialization", derive(Serialize, Deserialize))]
         pub struct $type(
             #[cfg_attr(feature = "serialization", serde(with = "BigArray"))] [u8; $size],
