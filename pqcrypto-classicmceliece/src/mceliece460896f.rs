@@ -141,7 +141,7 @@ macro_rules! encap {
         let mut ss = SharedSecret::new();
         let mut ct = Ciphertext::new();
         assert_eq!(
-            unsafe { ffi::$variant(ct.0.as_mut_ptr(), ss.0.as_mut_ptr(), $pk.0.as_ptr()) },
+            unsafe { ffi::$variant(ct.0.as_mut_ptr(), ss.0.as_mut_ptr(), $pk) },
             0,
         );
         (ss, ct)
@@ -150,6 +150,18 @@ macro_rules! encap {
 
 /// Encapsulate to a mceliece460896f public key
 pub fn encapsulate(pk: &PublicKey) -> (SharedSecret, Ciphertext) {
+    let k = pk.0.as_ptr();
+    #[cfg(all(enable_x86_avx2, feature = "avx2"))]
+    {
+        if std::is_x86_feature_detected!("avx2") {
+            return encap!(PQCLEAN_MCELIECE460896F_AVX_crypto_kem_enc, k);
+        }
+    }
+    encap!(PQCLEAN_MCELIECE460896F_VEC_crypto_kem_enc, k)
+}
+
+/// Encapsulate to a mceliece460896f public key (raw buffer)
+pub fn encapsulate_raw_pk(pk: *const u8) -> (SharedSecret, Ciphertext) {
     #[cfg(all(enable_x86_avx2, feature = "avx2"))]
     {
         if std::is_x86_feature_detected!("avx2") {
@@ -158,6 +170,7 @@ pub fn encapsulate(pk: &PublicKey) -> (SharedSecret, Ciphertext) {
     }
     encap!(PQCLEAN_MCELIECE460896F_VEC_crypto_kem_enc, pk)
 }
+
 
 macro_rules! decap {
     ($variant:ident, $ct:ident, $sk:ident) => {{
