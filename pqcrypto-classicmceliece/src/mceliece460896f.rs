@@ -150,13 +150,14 @@ macro_rules! encap {
 
 /// Encapsulate to a mceliece460896f public key
 pub fn encapsulate(pk: &PublicKey) -> (SharedSecret, Ciphertext) {
+    let k = pk.0.as_ptr();
     #[cfg(all(enable_x86_avx2, feature = "avx2"))]
     {
         if std::is_x86_feature_detected!("avx2") {
-            return encap!(PQCLEAN_MCELIECE460896F_AVX_crypto_kem_enc, pk.0.as_ptr());
+            return encap!(PQCLEAN_MCELIECE460896F_AVX_crypto_kem_enc, k));
         }
     }
-    encap!(PQCLEAN_MCELIECE460896F_VEC_crypto_kem_enc, pk.0.as_ptr())
+    encap!(PQCLEAN_MCELIECE460896F_VEC_crypto_kem_enc, k)
 }
 
 
