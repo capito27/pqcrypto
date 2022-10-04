@@ -65,13 +65,13 @@ pub const PQCLEAN_SABER_CLEAN_CRYPTO_PUBLICKEYBYTES: usize = 896;
 pub const PQCLEAN_SABER_CLEAN_CRYPTO_CIPHERTEXTBYTES: usize = 960;
 pub const PQCLEAN_SABER_CLEAN_CRYPTO_BYTES: usize = 32;
 
-#[cfg(enable_x86_avx2)]
+#[cfg(enable_avx2)]
 pub const PQCLEAN_SABER_AVX2_CRYPTO_SECRETKEYBYTES: usize = 2208;
-#[cfg(enable_x86_avx2)]
+#[cfg(enable_avx2)]
 pub const PQCLEAN_SABER_AVX2_CRYPTO_PUBLICKEYBYTES: usize = 896;
-#[cfg(enable_x86_avx2)]
+#[cfg(enable_avx2)]
 pub const PQCLEAN_SABER_AVX2_CRYPTO_CIPHERTEXTBYTES: usize = 960;
-#[cfg(enable_x86_avx2)]
+#[cfg(enable_avx2)]
 pub const PQCLEAN_SABER_AVX2_CRYPTO_BYTES: usize = 32;
 
 #[cfg(enable_aarch64_neon)]
